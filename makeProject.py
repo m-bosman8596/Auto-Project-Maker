@@ -1,11 +1,15 @@
-#! /usr/bin/python3
 import sys
 import os
 import time
 import subprocess
 from github import Github
 
-token = os.environ['GitHubAuthKey']
+import secret as s
+
+token = s.GITHUB_KEY
+WindowsLocation = s.WINDOWS_LOCATION
+LinuxLocation = s.LINUX_LOCATION
+MacLocation = s.MAC_LOCATION
 
 
 def CIFolder(project):
@@ -22,26 +26,34 @@ def CIFolder(project):
 
     elif 'win' in platform:
         print('Windows')
+        os.chdir(WindowsLocation)
         subprocess.run(['mkdir', project], shell=True)
         os.chdir(project)
         with open('README.md', 'w') as f:
             f.write(f'# {project}')
+        with open(".gitignore", "w") as f1:
+            for line in globalgitignore:
+                f1.write(line)
         subprocess.run(['git', 'init'])
         subprocess.run(['git', 'add', '.'])
         subprocess.run(['git', 'commit', '-m', '"Initial Commit"'])
         subprocess.run(['git', 'branch', '-M', 'master'])
+        subprocess.run(['code', '.'], shell=True)
 
 
 def InitGit(project):
     g = Github(token)
     repo = g.get_user().create_repo(project)
     print(repo.ssh_url)
-    subprocess.run(['git', 'remote', 'add', 'origin',
-                    repo.ssh_url], shell=True)
+    subprocess.run(['git', 'remote', 'add', 'origin', repo.ssh_url], shell=True)
+
     subprocess.run(['git', 'push', 'origin', 'master'], shell=True)
 
 
 project_name = sys.argv[1]
-# project_name = 'Hello'
+
+globalgitignore = open('globalignore.txt', 'r')
+
+
 CIFolder(project_name)
 InitGit(project_name)
