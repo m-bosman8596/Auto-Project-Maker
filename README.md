@@ -7,5 +7,10 @@ GITHUB_KEY = '' #Your github developer Personal Access Token
 WINDOWS_LOCATION = '' # Your default Git folder
 LINUX_LOCATION = '' # Your default Git folder
 MAC_LOCATION = '' #Your default Git folder
+GITIGNORE = '''
+                # Stuff you want your git ignore want to be
+                env/
+                .idea/
 
+            '''
 ```
