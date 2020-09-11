@@ -2,3 +2,6 @@
 .vscode
 secret.py
 __pycache__/
+build/
+dist/
+*.spec
